@@ -86,10 +86,20 @@ Many plaforms will already have pip and may also have Python 3 as the
 default.  Please follow the appropriate instructions based on your
 platform to install a virtual environment.
 
-Once a virtual environment has been created the application can be installed
-with pip:
 
+Once a virtual environment has been created the application can be installed
+with pip.  Prebuilt releases can be found in this repository at:
+
+https://github.com/UnivaCorporation/unisight-visualizations/releases
+
+They can be downloaded and installed locally or directly from the repo
+release as so:
+
+    # Local installation
     pip install unisight-data-bridge-1.0.0.tar.gz
+
+    # Installed directly from a release
+    pip install https://github.com/UnivaCorporation/unisight-visualizations/releases/download/v1.0.0/unisight-data-bridge-1.0.0.tar.gz
 
 Next a configuration holding the URL, username, and password of the Unisight
 GraphQL interface must be created.  As this has a sensitive password contained

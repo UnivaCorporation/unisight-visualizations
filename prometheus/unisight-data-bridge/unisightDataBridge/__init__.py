@@ -1,4 +1,4 @@
-def create_app(graphql_host, graphql_port, graphql_user, graphql_pass):
+def create_app(graphql_host="", graphql_port=0, graphql_user="", graphql_pass=""):
 
     from werkzeug.wsgi import DispatcherMiddleware
     from prometheus_client import make_wsgi_app

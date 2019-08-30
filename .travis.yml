@@ -1,0 +1,15 @@
+language: python
+python:
+- '2.7'
+script:
+- cd prometheus/unisight-data-bridge
+- python setup.py sdist
+deploy:
+  provider: releases
+  api_key:
+    secure: Qw9AStfqHovekZMT2Cxq/I3o+x5Di8EdM/dmSRGWHTN6mQD0NFRt8BJHKGLx+/HqXSBcQ98sqRaUyKvLJ4ySKDmkmftvzKMm0hakLgjiEkQuARViXad8sEk0KVx2PvooiaquwXDihw1AwkSOrbJXHseQwG4g9F94rS0TowT8xgMyaq7MgwqFt/7L6463DDxJ7Mr6+42VtzINqKCyBq8igBfusLe8jwDJBNQRYIkQS3cUcoiABAtHUplcNo6D2WDmAMUYk9diLn/mXUY/yTChYSbyJ206CjkK6ucnjkBRoODUx0FOqA17irCHvrgWzgtbVnIUQG6KHroKrnzVFVFzqeKbNUc06Q1p5Y+E/4rbWxr/DDBe6dezEF7Syan3SNEGKQjjZ0nXzulF/8VduCLqCwDMgY5fY2g3k7/1jLkkxtLI5KK/DHzJrJIpbeCXmlwsvQLAnyRSPZHbwYexQJydZIg6I4MjCL6Xp/ErKR9mZLdPoj+1It1pKsgwpcXzXDjBHduJEzdmeL6e7nwwEE5ZawtDUnTQTKN2oDpAlKTJsb4KUAvH3jyPMp1okVAft28d7y/QSL4s2Sy0hF30uT7zbKLWFo2laOjs6hePlgBtNgUv51iYHCdBuxXOkLRxSRwmwAX+D+TcOojMsMM9Yj5n8NM+OjFK6RfBIuLLQB5PF38=
+  file_glob: true
+  file: ./prometheus/unisight-data-bridge/dist/unisight-data-bridge-*.tar.gz
+  on:
+    repo: cameronbrunner/unisight-visualizations
+    branch: travis

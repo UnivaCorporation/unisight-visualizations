@@ -228,7 +228,7 @@ tested installation is CentOS 7 via the Grafana yum repository.  As of this writ
 version 6.2.5 was installed.  Following the instructions for CentOS 7 reduces to the following
 commands:
 
-    # Create grafana.repo in /etc.yum.repod.d with the contents specified
+    # Create grafana.repo in /etc/yum/repos.d with the contents specified
     yum install -y grafana
     systemctl daemon-reload
     systemctl start grafana-server

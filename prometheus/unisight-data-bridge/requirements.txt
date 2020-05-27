@@ -1,3 +1,4 @@
+werkzeug==0.16.1
 graphqlclient==0.2.4
 gunicorn==19.9.0
 numpy==1.16.2

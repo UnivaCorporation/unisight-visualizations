@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
+
 import time
 import json
 import os
@@ -223,7 +223,7 @@ def tot_running_jobs_byUser(myquery):
         job_dict[user] = cont_jobr_user
         slots_used += slots
         count_users+=1
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_tot_jobs_running_byuser.labels(k).set(v)
     gauge_tot_usage_slots.set(slots_used)
     gauge_count_users.set(count_users)
@@ -242,7 +242,7 @@ def tot_running_jobs_byProject(myquery):
         cont_jobr_project+=1
         job_dict[project] = cont_jobr_project
         count_projects+=1
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_tot_jobs_running_byproject.labels(k).set(v)
         gauge_count_projects.set(count_projects)
 
@@ -258,7 +258,7 @@ def tot_slots_byUser(myquery):
        used_slots = slots_dict.get(user,0)
        used_slots = used_slots + slots
        slots_dict[user] = used_slots
-   for k, v in slots_dict.items():
+   for k, v in list(slots_dict.items()):
        gauge_tot_slots_byuser.labels(k).set(v)
 
 #
@@ -273,7 +273,7 @@ def tot_slots_byProject(myquery):
        used_slots = slots_dict.get(project,0)
        used_slots = used_slots + slots
        slots_dict[project] = used_slots
-   for k, v in slots_dict.items():
+   for k, v in list(slots_dict.items()):
        gauge_tot_slots_byproject.labels(k).set(v)
 
 
@@ -291,7 +291,7 @@ def tot_running_tasks_byUser(myquery):
        if tasks > 0:
           count +=1
        tasks_dict[user] = count
-   for k, v in tasks_dict.items():
+   for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_running_byuser.labels(k).set(v)
 
 #
@@ -307,7 +307,7 @@ def tot_running_tasks_byProject(myquery):
        if tasks > 0:
           count +=1
        tasks_dict[project] = count
-   for k, v in tasks_dict.items():
+   for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_running_byproject.labels(k).set(v)
 
 #
@@ -327,7 +327,7 @@ def tot_queued_tasks_byUser(myquery):
        count = tasks_dict.get(user,0)
        count += value
        tasks_dict[user] = count
-   for k, v in tasks_dict.items():
+   for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_queued_byuser.labels(k).set(v)
 
 
@@ -348,7 +348,7 @@ def tot_queued_tasks_byProject(myquery):
        count = tasks_dict.get(project,0)
        count += value
        tasks_dict[project] = count
-   for k, v in tasks_dict.items():
+   for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_queued_byproject.labels(k).set(v)
 
 #
@@ -362,7 +362,7 @@ def tot_queued_jobs_byUser(myquery):
         cont_jobq_user = job_dict.get(user,0)
         cont_jobq_user+=1
         job_dict[user] = cont_jobq_user
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_tot_jobs_queued_byuser.labels(k).set(v)
 
 #
@@ -376,7 +376,7 @@ def tot_queued_jobs_byProject(myquery):
         cont_jobq_project = job_dict.get(project,0)
         cont_jobq_project+=1
         job_dict[project] = cont_jobq_project
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_tot_jobs_queued_byproject.labels(k).set(v)
 
 ################################################
@@ -395,7 +395,7 @@ def tot_job_usage_mem_byUser(myquery):
         conunt_mem_usage += jobmem
         job_dict[user] = conunt_mem_usage
         tot_mem_usage += conunt_mem_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_mem_byuser.labels(k).set(v)
     gauge_tot_usage_mem.set(tot_mem_usage)
 
@@ -411,7 +411,7 @@ def tot_job_usage_iow_byUser(myquery):
         conunt_usage += iow
         job_dict[user] = conunt_usage
         tot_iow_usage += conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_iow_byuser.labels(k).set(v)
     gauge_tot_usage_iow.set(tot_iow_usage)
 
@@ -427,7 +427,7 @@ def tot_job_usage_io_byUser(myquery):
         conunt_usage += io
         job_dict[user] = conunt_usage
         total_value += conunt_usage 
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_io_byuser.labels(k).set(v)
     gauge_tot_usage_iow.set(total_value)
 
@@ -443,7 +443,7 @@ def tot_job_usage_wallclock_byUser(myquery):
         conunt_usage += wallclock
         job_dict[user] = conunt_usage
         total_value += conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_wallclock_byuser.labels(k).set(v)
     gauge_tot_usage_wallclock.set(total_value)
 
@@ -459,7 +459,7 @@ def tot_job_usage_cpu_byUser(myquery):
         conunt_usage += cpu
         job_dict[user] = conunt_usage
         total_value += conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_cpu_byuser.labels(k).set(v)
     gauge_tot_usage_cpu.set(total_value)
 
@@ -475,7 +475,7 @@ def tot_job_usage_vmem_byUser(myquery):
         conunt_usage += vmem
         job_dict[user] = conunt_usage
         total_value += conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_vmem_byuser.labels(k).set(v)
     gauge_tot_usage_vmem.set(total_value)
 
@@ -491,7 +491,7 @@ def tot_job_usage_maxvmem_byUser(myquery):
         conunt_usage += maxvmem
         job_dict[user] = conunt_usage
         total_value += conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_maxvmem_byuser.labels(k).set(v)
     gauge_tot_usage_maxvmem.set(total_value)
 
@@ -509,7 +509,7 @@ def tot_job_usage_mem_byProject(myquery):
         jobmem = j.get('usage',0).get('mem',0)
         conunt_mem_usage += jobmem
         job_dict[project] = conunt_mem_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_mem_byproject.labels(k).set(v)
 
 # IOWaiting Usage by Project
@@ -522,7 +522,7 @@ def tot_job_usage_iow_byProject(myquery):
         iow = j.get('usage',0).get('iow',0)
         conunt_usage += iow
         job_dict[project] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_iow_byproject.labels(k).set(v)
 
 # IO Usage by Project
@@ -535,7 +535,7 @@ def tot_job_usage_io_byProject(myquery):
         io = j.get('usage',0).get('io',0)
         conunt_usage += io
         job_dict[project] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_io_byproject.labels(k).set(v)
 
 # wallclock Usage by Project
@@ -548,7 +548,7 @@ def tot_job_usage_wallclock_byProject(myquery):
         wallclock = j.get('usage',0).get('wallclock',0)
         conunt_usage += wallclock
         job_dict[project] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_wallclock_byproject.labels(k).set(v)
 
 # CPU Usage by Project
@@ -561,7 +561,7 @@ def tot_job_usage_cpu_byProject(myquery):
         cpu = j.get('usage',0).get('cpu',0)
         conunt_usage += cpu
         job_dict[project] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_cpu_byproject.labels(k).set(v)
 
 # vmem Usage by Project
@@ -574,7 +574,7 @@ def tot_job_usage_vmem_byProject(myquery):
         vmem = j.get('usage',0).get('vmem',0)
         conunt_usage += vmem
         job_dict[project] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_vmem_byproject.labels(k).set(v)
 
 # Maxvmem Usage by Project
@@ -587,7 +587,7 @@ def tot_job_usage_maxvmem_byProject(myquery):
         maxvmem = j.get('usage',0).get('maxvmem',0)
         conunt_usage += maxvmem
         job_dict[project] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_job_usage_maxvmem_byproject.labels(k).set(v)
 
 #########################
@@ -604,7 +604,7 @@ def jobid_mem_usage(myquery):
         jobmem = j.get('usage',0).get('mem',0)
         conunt_mem_usage += jobmem
         job_dict[job] = conunt_mem_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_mem.labels(k).set(v)
 
 # iow Usage by JobID
@@ -617,7 +617,7 @@ def jobid_iow_usage(myquery):
         current = j.get('usage',0).get('iow',0)
         conunt_usage += current
         job_dict[job] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_iow.labels(k).set(v)
 
 # io Usage by JobID
@@ -630,7 +630,7 @@ def jobid_io_usage(myquery):
         current = j.get('usage',0).get('io',0)
         conunt_usage += current
         job_dict[job] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_io.labels(k).set(v)
 
 # wallclock Usage by JobID
@@ -643,7 +643,7 @@ def jobid_wallclock_usage(myquery):
         current = j.get('usage',0).get('wallclock',0)
         conunt_usage += current
         job_dict[job] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_wallclock.labels(k).set(v)
 
 # vmem Usage by JobID
@@ -656,7 +656,7 @@ def jobid_vmem_usage(myquery):
         current = j.get('usage',0).get('vmem',0)
         conunt_usage += current
         job_dict[job] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_vmem.labels(k).set(v)
 
 
@@ -670,7 +670,7 @@ def jobid_cpu_usage(myquery):
         current = j.get('usage',0).get('cpu',0)
         conunt_usage += current
         job_dict[job] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_cpu.labels(k).set(v)
 
 # maxvmem Usage by JobID
@@ -683,7 +683,7 @@ def jobid_maxvmem_usage(myquery):
         current = j.get('usage',0).get('maxvmem',0)
         conunt_usage += current
         job_dict[job] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_maxvmem.labels(k).set(v)
 
 # ioops Usage by JobID
@@ -696,7 +696,7 @@ def jobid_ioops_usage(myquery):
         current = j.get('usage',0).get('ioops',0)
         conunt_usage += current
         job_dict[job] = conunt_usage
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_jobid_usage_ioops.labels(k).set(v)
 
 #################
@@ -714,7 +714,7 @@ def server_info_memusage(myquery):
         usage = h.get('resourceNumericValues',0).get('mem_used',0)
         conunt_usage += usage
         host_dict[hostname] = conunt_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_mem_usage.labels(k).set(v)
 
 # mem free by server
@@ -727,7 +727,7 @@ def server_info_memfree(myquery):
         usage = h.get('resourceNumericValues',0).get('mem_free',0)
         conunt_usage += usage
         host_dict[hostname] = conunt_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_mem_free.labels(k).set(v)
 
 
@@ -743,7 +743,7 @@ def server_info_jobcount(myquery):
         #usage = h.get('resourceNumericValues',0).get('jobCount',0)
         conunt_usage += jobcount
         host_dict[hostname] = conunt_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_jobcount_usage.labels(k).set(v)
         
 
@@ -758,7 +758,7 @@ def server_info_np_load_avg(myquery):
         np_load = h.get('resourceNumericValues',0).get('np_load_avg',0)
         conunt_usage += np_load
         host_dict[hostname] = conunt_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_np_load_avg.labels(k).set(v)
 
 # cpu by server
@@ -771,7 +771,7 @@ def server_info_cpu(myquery):
         value = h.get('resourceNumericValues',0).get('cpu',0)
         count_usage += value
         host_dict[hostname] = count_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_cpu.labels(k).set(v)
 
 # virtual_mem used by server
@@ -784,7 +784,7 @@ def server_info_virtual_mem(myquery):
         value = h.get('resourceNumericValues',0).get('virtual_used',0)
         count_usage += value
         host_dict[hostname] = count_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_virtualmem_used.labels(k).set(v)
 
 # local scratch used by server
@@ -797,7 +797,7 @@ def server_info_local_scratch_total(myquery):
         value = h.get('resourceNumericValues',0).get('opt_total_space',0)
         count_usage += float(value)
         host_dict[hostname] = count_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_scratch_total.labels(k).set(v)
 
 # local scratch used by server
@@ -810,7 +810,7 @@ def server_info_local_scratch_used(myquery):
         value = h.get('resourceNumericValues',0).get('opt_used_space',0)
         count_usage += float(value)
         host_dict[hostname] = count_usage
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_scratch_used.labels(k).set(v)
 
 #gauge_server_execd_status = Gauge('server_execd_status', 'Execd process running in the server',['hostname'])
@@ -824,7 +824,7 @@ def server_info_execd_status(myquery):
         value = h.get('resourceNumericValues',0).get('execd_running',0)
         #count_usage += float(value)
         host_dict[hostname] = value
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_server_execd_status.labels(k).set(v)
 
 #gauge_scratch_used = Gauge('scratch_used_in_host', 'Scratch used in the host',['hostname'])
@@ -840,7 +840,7 @@ def server_info_scratch_used_status(myquery):
         else:
            val = 1
         host_dict[hostname] = val
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_scratch_used.labels(k).set(v)
 
 
@@ -922,7 +922,7 @@ def jobs_by_state(myquery):
         count = job_status_dict.get(state,0)
         count+=1
         job_status_dict[state] = count
-    for k, v in job_status_dict.items():
+    for k, v in list(job_status_dict.items()):
         gauge_jobs.labels(k).set(v)
 
 #
@@ -936,7 +936,7 @@ def jobs_per_queue(myquery):
         count = job_queue_name_dict.get(queue_name,0)
         count+=1
         job_queue_name_dict[queue_name] = count
-    for k, v in job_queue_name_dict.items():
+    for k, v in list(job_queue_name_dict.items()):
         gauge_jobs_in_queue.labels(k).set(v)
 
 
@@ -949,7 +949,7 @@ def get_queue_slots(myquery):
         slots = j.get('slots',0)
         count+=slots
         job_dict[queue_name] = count
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_slots_in_queue.labels(k).set(v)
 
 def get_mem_per_queue(myquery):
@@ -961,7 +961,7 @@ def get_mem_per_queue(myquery):
         mem = j.get('usage',0).get('mem',0)
         count+=mem
         job_dict[queue_name] = count
-    for k, v in job_dict.items():
+    for k, v in list(job_dict.items()):
         gauge_mem_used_per_queue.labels(k).set(v)
 
 def get_np_load_avg(myquery):
@@ -971,5 +971,5 @@ def get_np_load_avg(myquery):
         hostname = h.get('hostname',"unknown")
         np_load_avg = h.get('resourceNumericValues',0).get('np_load_avg',0)
         host_dict[hostname] = np_load_avg
-    for k, v in host_dict.items():
+    for k, v in list(host_dict.items()):
         gauge_np_load_avg.labels(k).set(v)

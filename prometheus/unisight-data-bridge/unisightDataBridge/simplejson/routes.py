@@ -33,7 +33,7 @@ def create_app(graphql_host, graphql_port, graphql_auth):
 
     @app.route('/', methods=methods)
     def ok():
-        print(request.headers, request.get_json())
+        print((request.headers, request.get_json()))
         return 'This datasource is healthy.'
 
 
@@ -41,7 +41,7 @@ def create_app(graphql_host, graphql_port, graphql_auth):
     def search():
 
         print('/search')
-        print(request.headers, request.get_json())
+        print((request.headers, request.get_json()))
 
         #return jsonify(['job_number','slots','group','owner','project','department','usage.ru_wallclock','usage.cpu','usage.mem','usage.io','usage.iow','usage.iow'])
         return jsonify(['Jobs_Table','Historical_Jobs_Table','Historical_Job_Timeseries_Slots'])
@@ -77,7 +77,7 @@ def create_app(graphql_host, graphql_port, graphql_auth):
     def annotations():
 
         print('/anotations')
-        print(request.headers, request.get_json())
+        print((request.headers, request.get_json()))
 
         req = request.get_json()
         data = [

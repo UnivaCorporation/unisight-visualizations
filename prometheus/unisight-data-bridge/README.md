@@ -7,7 +7,7 @@ and [Prometheus](https://prometheus.io/docs/visualization/grafana/) datasource.
 
 # Design
 
-This applicaiton contains two independent WSGI applicaitons that are merged into
+This application contains two independent WSGI applications that are merged into
 one via WSGI application dispatching.  Each application is responsible for a given
 set of metrics.  The `simplejson` app exposes scraped metrics via an Flask 
 application meeting the needs of the SimpleJSON Grafana Datasource plugin.  The

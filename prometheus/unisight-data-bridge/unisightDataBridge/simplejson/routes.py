@@ -33,7 +33,6 @@ def create_app(graphql_host, graphql_port, graphql_auth):
 
     @app.route('/', methods=methods)
     def ok():
-        print(request.headers, request.get_json())
         return 'This datasource is healthy.'
 
 

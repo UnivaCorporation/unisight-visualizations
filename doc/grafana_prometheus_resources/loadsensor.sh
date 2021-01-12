@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 #___INFO__MARK_BEGIN__
 ##########################################################################
@@ -75,9 +75,11 @@ function scratch_mounted()
 
 function execd_running()
 {
-  # space used in /opt
-  running=`ps aux | grep execd | grep -v grep | wc -l`
-  echo "$running"
+  # Is the execd running
+  # Default to registered port if environment variable is undefined
+  PORT=${SGE_EXECD_PORT:-6445}
+  ! $SGE_ROOT/bin/$ARCH/qping -info $HOST $PORT execd 1 >/dev/null 2>&1
+  echo "$?"
 }
 
 end=false

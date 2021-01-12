@@ -89,8 +89,15 @@ def all_jobs_metric(graphql_host, graphql_port, graphql_auth):
       df = df.append(df_temp,sort=True)
       pd.to_datetime(df['time'].values, unit='ms', utc=True)
 
-    df.set_index('submitEpoch',  append=False,inplace=True)
-    return(df[['submission_time','jobid','taskid','slots','priority','department','project','shares','queue_name','hosts','usage.iow','usage.mem','usage.ioops','usage.cpu','usage.vmem','usage.wallclock','usage.maxvmem']])
+    COLS = ['submission_time','jobid','taskid','slots','priority','department','project','shares','queue_name','hosts','usage.iow','usage.mem','usage.ioops','usage.cpu','usage.vmem','usage.wallclock','usage.maxvmem']
+
+    # Handle case where no jobs were found by creating an empty data frame
+    # with the expected columns
+    if len(df) == 0:
+        df = pd.DataFrame(columns=COLS + ['submitEpoch'])
+
+    df.set_index('submitEpoch', append=False, inplace=True)
+    return df[COLS]
 
 #
 #  Get Table with historical data
@@ -120,8 +127,15 @@ def all_historical_job_metric(graphql_host,graphql_port,graphql_auth):
       df = df.append(df_temp,sort=True)
       #pd.to_datetime(df['time'].values, unit='ms', utc=True)
 
-    df.set_index('submission_time_ms',  append=False,inplace=True)
+    COLS = ['job_number','owner','slots','qname','project','usage.ru_wallclock','usage.cpu','hostname']
+
+    # Handle case where no jobs were found by creating an empty data frame
+    # with the expected columns
+    if len(df) == 0:
+        df = pd.DataFrame(columns=COLS + ['submission_time_ms'])
+
+    df.set_index('submission_time_ms', append=False, inplace=True)
     #df.index = df.index.to_datetime()
     # Use the following for values like 3.5G.  Will remove the 'G' at the end.
     # pd.to_numeric(df['m_mem_used'].str.replace('[^\d.]', ''), errors='coerce')
-    return (df[['job_number','owner','slots','qname','project','usage.ru_wallclock','usage.cpu','hostname']])
+    return df[COLS]

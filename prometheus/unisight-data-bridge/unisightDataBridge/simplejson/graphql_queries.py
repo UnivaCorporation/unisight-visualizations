@@ -63,7 +63,7 @@ def query_allJobs(client):
   state
   department
   project
-  parrallelEnv
+  parallelEnv
   priority
   shares
   restart
@@ -95,7 +95,7 @@ def query_AllJobs_Running(client):
   state
   department
   project
-  parrallelEnv
+  parallelEnv
   priority
   shares
   restart
@@ -127,7 +127,7 @@ def query_AllJobs_Queued(client):
   state
   department
   project
-  parrallelEnv
+  parallelEnv
   priority
   shares
   restart

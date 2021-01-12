@@ -818,12 +818,37 @@ def server_info_local_scratch_used(myquery):
 def server_info_execd_status(myquery):
     host_dict = {}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
-    for h in allHosts.get('Hosts',[]):
-        hostname = h.get('hostname',"unknown")
-        #count_usage = host_dict.get(hostname,0)
-        value = h.get('resourceNumericValues',0).get('execd_running',0)
-        #count_usage += float(value)
+
+    # Loop over hosts
+    for h in allHosts.get('Hosts', []):
+        # Try to get the host's state value; might not be
+        # available in certain Unisight versions so we try a few other
+        # options as well
+        hostname = h.get("hostname", "unknown")
+        state = h.get("state", None)
+        execd_running = h.get("resourceNumericValues", {}).get(
+            "execd_running",
+            None
+        )
+        if state is not None:
+            value = int(state == "Available")
+        elif execd_running is not None:
+            value = execd_running
+        else:
+            queueList = h.get("queueList", [])
+            if len(queueList) == 0:
+                value = 0
+            else:
+                # Loop over all queues; all must be healthy to mark the host
+                # as healthy
+                for queue in h.get("queueList", []):
+                    # Queue state being an empty string means healthy
+                    value = int(queue.get("state", "empty") == "")
+                    if value == 0:
+                        break
+
         host_dict[hostname] = value
+
     for k, v in list(host_dict.items()):
         gauge_server_execd_status.labels(k).set(v)
 

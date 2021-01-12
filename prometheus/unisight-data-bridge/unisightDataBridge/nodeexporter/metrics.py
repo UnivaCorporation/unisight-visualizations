@@ -711,7 +711,7 @@ def server_info_memusage(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         conunt_usage = host_dict.get(hostname,0)
-        usage = h.get('resourceNumericValues',0).get('mem_used',0)
+        usage = h.get('resourceNumericValues', {}).get('mem_used',0)
         conunt_usage += usage
         host_dict[hostname] = conunt_usage
     for k, v in list(host_dict.items()):
@@ -724,7 +724,7 @@ def server_info_memfree(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         conunt_usage = host_dict.get(hostname,0)
-        usage = h.get('resourceNumericValues',0).get('mem_free',0)
+        usage = h.get('resourceNumericValues', {}).get('mem_free',0)
         conunt_usage += usage
         host_dict[hostname] = conunt_usage
     for k, v in list(host_dict.items()):
@@ -740,7 +740,7 @@ def server_info_jobcount(myquery):
         hostname = h.get('hostname',"unknown")
         conunt_usage = host_dict.get(hostname,0)
         jobcount = h.get('jobCount',0)
-        #usage = h.get('resourceNumericValues',0).get('jobCount',0)
+        #usage = h.get('resourceNumericValues', {}).get('jobCount',0)
         conunt_usage += jobcount
         host_dict[hostname] = conunt_usage
     for k, v in list(host_dict.items()):
@@ -755,7 +755,7 @@ def server_info_np_load_avg(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         conunt_usage = host_dict.get(hostname,0)
-        np_load = h.get('resourceNumericValues',0).get('np_load_avg',0)
+        np_load = h.get('resourceNumericValues', {}).get('np_load_avg',0)
         conunt_usage += np_load
         host_dict[hostname] = conunt_usage
     for k, v in list(host_dict.items()):
@@ -768,7 +768,7 @@ def server_info_cpu(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
-        value = h.get('resourceNumericValues',0).get('cpu',0)
+        value = h.get('resourceNumericValues', {}).get('cpu',0)
         count_usage += value
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
@@ -781,7 +781,7 @@ def server_info_virtual_mem(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
-        value = h.get('resourceNumericValues',0).get('virtual_used',0)
+        value = h.get('resourceNumericValues', {}).get('virtual_used',0)
         count_usage += value
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
@@ -794,7 +794,7 @@ def server_info_local_scratch_total(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
-        value = h.get('resourceNumericValues',0).get('opt_total_space',0)
+        value = h.get('resourceNumericValues', {}).get('opt_total_space',0)
         count_usage += float(value)
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
@@ -807,7 +807,7 @@ def server_info_local_scratch_used(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
-        value = h.get('resourceNumericValues',0).get('opt_used_space',0)
+        value = h.get('resourceNumericValues', {}).get('opt_used_space',0)
         count_usage += float(value)
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
@@ -834,7 +834,7 @@ def server_info_scratch_used_status(myquery):
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         #count_usage = host_dict.get(hostname,0)
-        value = h.get('resourceNumericValues',0).get('opt_used_space',0)
+        value = h.get('resourceNumericValues', {}).get('opt_used_space',0)
         if float(value) >= 6:
            val = 0
         else:
@@ -862,13 +862,13 @@ def cluster_info(myquery):
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
     for h in allHosts.get('Hosts',[]):
         #hostname = h.get('hostname',"unknown")
-        num_proc = h.get('resourceNumericValues',0).get('num_proc',0)
-        mem_total = h.get('resourceNumericValues',0).get('mem_total',0)
-        mem_used = h.get('resourceNumericValues',0).get('mem_used',0)
-        np_load_avg = h.get('resourceNumericValues',0).get('np_load_avg',0)
-        opt_total = h.get('resourceNumericValues',0).get('opt_total_space',0) 
-        opt_used = h.get('resourceNumericValues',0).get('opt_used_space',0)
-        opt_avail = h.get('resourceNumericValues',0).get('opt_avail_space',0)
+        num_proc = h.get('resourceNumericValues', {}).get('num_proc',0)
+        mem_total = h.get('resourceNumericValues', {}).get('mem_total',0)
+        mem_used = h.get('resourceNumericValues', {}).get('mem_used',0)
+        np_load_avg = h.get('resourceNumericValues', {}).get('np_load_avg',0)
+        opt_total = h.get('resourceNumericValues', {}).get('opt_total_space',0)
+        opt_used = h.get('resourceNumericValues', {}).get('opt_used_space',0)
+        opt_avail = h.get('resourceNumericValues', {}).get('opt_avail_space',0)
  
         cpu_used = h.get('cpu',0)
         jobs = h.get('jobCount',0)
@@ -969,7 +969,7 @@ def get_np_load_avg(myquery):
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
-        np_load_avg = h.get('resourceNumericValues',0).get('np_load_avg',0)
+        np_load_avg = h.get('resourceNumericValues', {}).get('np_load_avg',0)
         host_dict[hostname] = np_load_avg
     for k, v in list(host_dict.items()):
         gauge_np_load_avg.labels(k).set(v)

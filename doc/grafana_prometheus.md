@@ -61,7 +61,7 @@ data from the Univa Grid Engine cluster.  For instuctions on these
 two pre-requisites please refer to their product documentation.
 
 The installation can be performed on any platform that is supported
-by both Grafana and Prometheus and has at least a Python 2.7 installation
+by both Grafana and Prometheus and has at least a Python 3.6 installation
 present.  The installation has been tested most significantly on a
 CentOS 7 based system.  Additionally the instructions included bellow
 assume a systemd enabled system when it comes to service configuration
@@ -76,9 +76,7 @@ base Python installation.  On a clean CentOS 7 machine this can be
 accomplished with the following commands run as root or via sudo:
 
 ```
-easy_install pip
-pip install virtualenv
-virtualenv /opt/unisight-data-bridge
+python3 -m venv /opt/unisight-data-bridge
 . /opt/unisight-data-bridge/bin/activate
 ```
 
@@ -96,12 +94,15 @@ They can be downloaded and installed locally or directly from the repo
 release as so:
 
     # Local installation
-    pip install unisight-data-bridge-1.0.0.tar.gz
+    pip install unisight-data-bridge-2.0.0.tar.gz
 
     # Installed directly from a release
-    pip install https://github.com/UnivaCorporation/unisight-visualizations/releases/download/v1.0.0/unisight-data-bridge-1.0.0.tar.gz
+    pip install https://github.com/UnivaCorporation/unisight-visualizations/releases/download/v2.0.0/unisight-data-bridge-2.0.0.tar.gz
 
-Next a configuration holding the URL, username, and password of the Unisight
+See the [compatibility](#compatibility) section for information on which versions of this product are compatible with different Unisight versions.
+
+
+Next, a configuration holding the URL, username, and password of the Unisight
 GraphQL interface must be created.  As this has a sensitive password contained
 it should be placed in a location where only the systemd service user can
 read it.
@@ -119,8 +120,7 @@ Finally the `<auth-token>` string should be replaced with the HTTP
 Authentication data to use when connecting to the Unisight server.  The
 simplest method is HTTP Basic.  Such a token can be created with:
 
-    python -c 'from __future__ import print_function; import base64; \
-       print("Basic " + base64.b64encode("graphql_user:graphql_pass".encode()).decode())'
+    python -c 'import base64; print("Basic " + base64.b64encode("graphql_user:graphql_pass".encode()).decode())'
 
 With `graphql_user` replaced with your Unisight user and `graphql_pass`
 replaced with your GraphQL password.
@@ -313,3 +313,10 @@ as `loadsensor.sh` and then run the following command:
 This default dashboard is just a sample of what you can do with the system feel free to change it,
 copy it, and add new graphs as desired.  Additionally the Unisight Data Bridge can be customized
 to product even more metrics that can then be consumed and rendered in Grafana.
+
+## Compatibility
+
+| `unisight-visualizations` release series | Unisight version(s) | Other requirements |
+| ---------------------------------------- | ------------------- | ------------------ |
+| 1.0                                      | 4.4.2               | CentOS 7, Python 2 |
+| 2.0                                      | 4.4.2               | Python 3           |

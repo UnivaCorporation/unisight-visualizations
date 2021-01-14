@@ -16,16 +16,18 @@ from setuptools import find_packages, setup
 
 setup(
     name='unisight-data-bridge',
-    version='1.0.0',
+    version='2.0.0',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
+    python_requires='>=3.6',
     install_requires=[
+      'werkzeug==0.16.1',
       'graphqlclient==0.2.4',
       'gunicorn==19.9.0',
-      'numpy==1.16.2',
+      'numpy==1.17.4',
       'Flask==1.0.2',
-      'pandas==0.24.2',
+      'pandas==1.0.5',
       'prometheus-client==0.6.0',
     ],
 )

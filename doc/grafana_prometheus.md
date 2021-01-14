@@ -99,7 +99,10 @@ release as so:
     # Installed directly from a release
     pip install https://github.com/UnivaCorporation/unisight-visualizations/releases/download/v2.0.0/unisight-data-bridge-2.0.0.tar.gz
 
-Next a configuration holding the URL, username, and password of the Unisight
+See the [compatibility](#compatibility) section for information on which versions of this product are compatible with different Unisight versions.
+
+
+Next, a configuration holding the URL, username, and password of the Unisight
 GraphQL interface must be created.  As this has a sensitive password contained
 it should be placed in a location where only the systemd service user can
 read it.
@@ -310,3 +313,10 @@ as `loadsensor.sh` and then run the following command:
 This default dashboard is just a sample of what you can do with the system feel free to change it,
 copy it, and add new graphs as desired.  Additionally the Unisight Data Bridge can be customized
 to product even more metrics that can then be consumed and rendered in Grafana.
+
+## Compatibility
+
+| `unisight-visualizations` release series | Unisight version(s) | Other requirements |
+| ---------------------------------------- | ------------------- | ------------------ |
+| 1.0                                      | 4.4.2               | CentOS 7, Python 2 |
+| 2.0                                      | 4.4.2               | Python 3           |

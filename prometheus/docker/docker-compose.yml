@@ -1,0 +1,52 @@
+version: '3.6'
+services:
+  data-bridge:
+    image: data-bridge:2.0.0
+    container_name: data-bridge
+    environment:
+      - UNISIGHT_ADMIN_USER=$UNISIGHT_ADMIN_USER
+      - UNISIGHT_ADMIN_PSWD=$UNISIGHT_ADMIN_PASSWORD
+      - GRAPHQL_HOST=172.20.0.1
+      - GRAPHQL_PORT=3000
+    networks:
+      - internal
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - internal
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus:/prometheus
+    depends_on:
+      - data-bridge
+
+  grafana:
+    image: grafana/grafana:7.4.0
+    container_name: grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: $GRAFANA_ADMIN_USER
+      GF_SECURITY_ADMIN_PASSWORD: $GRAFANA_ADMIN_PASSWORD
+      GF_INSTALL_PLUGINS: grafana-simple-json-datasource,flant-statusmap-panel
+      PROMETHEUS_HOST: prometheus:9090
+    ports:
+      - 3003:3000
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - internal
+
+networks:
+  internal:
+    
+volumes:
+  prometheus:
+  grafana-storage:

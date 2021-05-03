@@ -62,13 +62,18 @@ def query_allJobs(client):
   state
   department
   project
-  parrallelEnv
+  parallelEnv
   priority
   shares
   restart
   slots
   taskid
-  timeStamp
+  timeStamp {
+    start
+    startEpoch
+    submit
+    submitEpoch
+  }
   usage
   mailOpt
   wait_time_seconds
@@ -94,13 +99,18 @@ def query_AllJobs_Running(client):
   state
   department
   project
-  parrallelEnv
+  parallelEnv
   priority
   shares
   restart
   slots
   taskid
-  timeStamp
+  timeStamp {
+    start
+    startEpoch
+    submit
+    submitEpoch
+  }
   usage
   mailOpt
   wait_time_seconds
@@ -126,13 +136,18 @@ def query_AllJobs_Queued(client):
   state
   department
   project
-  parrallelEnv
+  parallelEnv
   priority
   shares
   restart
   slots
   taskid
-  timeStamp
+  timeStamp {
+    start
+    startEpoch
+    submit
+    submitEpoch
+  }
   usage
   mailOpt
   wait_time_seconds

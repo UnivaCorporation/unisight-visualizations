@@ -1,22 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "description": "This dashboard requires a node exporter to publish graphql queried data to prometheus",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    },
-    {
-      "name": "DS_SIMPLEJSON",
-      "label": "SimpleJson",
-      "description": "This dashboard uses a SimpleJson implementing web service to extract and provide data about jobs in Univa Grid Engine",
-      "type": "datasource",
-      "pluginId": "grafana-simple-json-datasource",
-      "pluginName": "SimpleJson"
-    }
-  ],
   "__requires": [
     {
       "type": "panel",
@@ -103,6 +85,7 @@
         "#bf1b00",
         "#d44a3a"
       ],
+      "datasource": "Prometheus",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -355,6 +338,7 @@
         "#bf1b00",
         "#d44a3a"
       ],
+      "datasource": "Prometheus",
       "format": "gbytes",
       "gauge": {
         "maxValue": 100,
@@ -436,6 +420,7 @@
         "#bf1b00",
         "#d44a3a"
       ],
+      "datasource": "Prometheus",
       "format": "gbytes",
       "gauge": {
         "maxValue": 100,
@@ -517,6 +502,7 @@
         "#e0752d",
         "#bf1b00"
       ],
+      "datasource": "Prometheus",
       "format": "none",
       "gauge": {
         "maxValue": 2,
@@ -599,6 +585,7 @@
         "#f2c96d",
         "#bf1b00"
       ],
+      "datasource": "Prometheus",
       "format": "percent",
       "gauge": {
         "maxValue": 1,
@@ -681,6 +668,7 @@
         "#e0752d",
         "#bf1b00"
       ],
+      "datasource": "Prometheus",
       "decimals": null,
       "format": "percentunit",
       "gauge": {
@@ -767,6 +755,7 @@
         "#ef843c",
         "#bf1b00"
       ],
+      "datasource": "Prometheus",
       "decimals": 1,
       "format": "percentunit",
       "gauge": {
@@ -849,6 +838,7 @@
         "#f2c96d",
         "#bf1b00"
       ],
+      "datasource": "Prometheus",
       "format": "percentunit",
       "gauge": {
         "maxValue": 1,
@@ -932,6 +922,7 @@
         "#f2c96d",
         "#bf1b00"
       ],
+      "datasource": "Prometheus",
       "decimals": 1,
       "format": "iops",
       "gauge": {
@@ -1128,6 +1119,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "decimals": 0,
       "fill": 1,
       "gridPos": {
@@ -1260,6 +1252,7 @@
         "decimals": null,
         "unitFormat": "short"
       },
+      "datasource": "Prometheus",
       "gridPos": {
         "h": 3,
         "w": 21,
@@ -1531,6 +1524,7 @@
     },
     {
       "collapsed": false,
+      "datasource": "Prometheus",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1636,6 +1630,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -1721,6 +1716,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -1806,6 +1802,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -1980,6 +1977,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2065,6 +2063,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2150,6 +2149,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2235,6 +2235,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2322,6 +2323,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2407,6 +2409,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2505,6 +2508,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2591,6 +2595,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2676,6 +2681,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2761,6 +2767,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2846,6 +2853,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -2932,6 +2940,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3018,6 +3027,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3104,6 +3114,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3189,6 +3200,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3275,6 +3287,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3361,6 +3374,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3447,6 +3461,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3547,6 +3562,7 @@
       "dashLength": 10,
       "dashes": false,
       "decimals": 0,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -3638,6 +3654,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 8,
@@ -3730,6 +3747,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "decimals": 0,
       "fill": 1,
       "gridPos": {
@@ -3822,6 +3840,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "gridPos": {
         "h": 4,
@@ -4009,8 +4028,8 @@
     ]
   },
   "timezone": "",
-  "title": "Univa Grid Engine Cluster",
-  "uid": "U6U_GdzWk",
+  "title": "Altair Grid Engine Cluster",
+  "uid": "altair-rev1",
   "version": 1,
-  "description": "Sample dashboard pulling data from a Univa Grid Engine Backed Unisight Cluster."
+  "description": "Sample dashboard pulling data from a Altair Grid Engine Backed Unisight Cluster."
 }

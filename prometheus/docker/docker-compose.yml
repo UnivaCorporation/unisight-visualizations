@@ -1,7 +1,7 @@
 version: '3.6'
 services:
   data-bridge:
-    image: data-bridge:2.0.0
+    image: univa/unisight-data-bridge:2.0.0
     container_name: data-bridge
     environment:
       - UNISIGHT_ADMIN_USER=$UNISIGHT_ADMIN_USER

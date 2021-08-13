@@ -68,7 +68,12 @@ def query_allJobs(client):
   restart
   slots
   taskid
-  timeStamp
+  timeStamp {
+    start
+    startEpoch
+    submit
+    submitEpoch
+  }
   usage
   mailOpt
   wait_time_seconds
@@ -100,7 +105,12 @@ def query_AllJobs_Running(client):
   restart
   slots
   taskid
-  timeStamp
+  timeStamp {
+    start
+    startEpoch
+    submit
+    submitEpoch
+  }
   usage
   mailOpt
   wait_time_seconds
@@ -132,7 +142,12 @@ def query_AllJobs_Queued(client):
   restart
   slots
   taskid
-  timeStamp
+  timeStamp {
+    start
+    startEpoch
+    submit
+    submitEpoch
+  }
   usage
   mailOpt
   wait_time_seconds

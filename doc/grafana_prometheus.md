@@ -94,10 +94,10 @@ They can be downloaded and installed locally or directly from the repo
 release as so:
 
     # Local installation
-    pip install unisight-data-bridge-2.0.0.tar.gz
+    pip install unisight-data-bridge-2.1.0.tar.gz
 
     # Installed directly from a release
-    pip install https://github.com/UnivaCorporation/unisight-visualizations/releases/download/v2.0.0/unisight-data-bridge-2.0.0.tar.gz
+    pip install https://github.com/UnivaCorporation/unisight-visualizations/releases/download/v2.1.0/unisight-data-bridge-2.1.0.tar.gz
 
 See the [compatibility](#compatibility) section for information on which versions of this product are compatible with different Unisight versions.
 
@@ -320,3 +320,4 @@ to product even more metrics that can then be consumed and rendered in Grafana.
 | ---------------------------------------- | ------------------- | ------------------ |
 | 1.0                                      | 4.4.2               | CentOS 7, Python 2 |
 | 2.0                                      | 4.4.2               | Python 3           |
+| 2.1                                      | 4.6.0               | Python 3           |

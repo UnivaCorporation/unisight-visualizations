@@ -17,23 +17,46 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Get the tag name
-      - name: Get the version
-        if: startsWith(github.ref, 'refs/tags/v')
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Setup python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
+      # Get the tag name
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(python prometheus/unisight-data-bridge/setup.py --version | sed 's/\+/_/')
 
       # Build python source distribution tarball
       - name: Build source distribution
         run: |
           cd prometheus/unisight-data-bridge
           python setup.py sdist
+      - name: Build Container
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: unisight-data-bridge
+          tags: ${{ steps.get_version.outputs.VERSION }}
+          dockerfiles: |
+            prometheus/docker/Dockerfile
+
+      # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+      # in which case 'username' and 'password' can be omitted.
+      - name: Push To quay.io
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/univa
+          username: univa+github_push
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
       - name: Create Release
         id: create_release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -43,4 +66,4 @@ jobs:
         with:
           draft: true
           prerelease: true
-          files: ./prometheus/unisight-data-bridge/dist/unisight-data-bridge-2.1.0.tar.gz
+          files: ./prometheus/unisight-data-bridge/dist/unisight-data-bridge-*.tar.gz

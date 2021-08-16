@@ -1,13 +1,17 @@
-FROM centos:7
+FROM python:3.6
 
+COPY . /unisight-visualizations
+RUN cd /unisight-visualizations/prometheus/unisight-data-bridge && python setup.py sdist
+
+FROM centos:7
 RUN yum install -y python3 python3-venv python3-pip
 
-RUN curl -L -O https://github.com/UnivaCorporation/unisight-visualizations/releases/download/v2.1.0/unisight-data-bridge-2.1.0.tar.gz
+COPY --from=0 /unisight-visualizations/prometheus/unisight-data-bridge/dist/unisight-data-bridge-*.tar.gz /tmp
 
 RUN python3 -m venv /opt/unisight-data-bridge
-RUN . /opt/unisight-data-bridge/bin/activate && pip3 install unisight-data-bridge-2.1.0.tar.gz
+RUN . /opt/unisight-data-bridge/bin/activate && pip3 install `ls -t /tmp/unisight-data-bridge-*.tar.gz | head -n 1`
 
 EXPOSE 8001
 
-COPY init.sh /
+COPY prometheus/docker/init.sh /
 CMD [ "/init.sh" ]

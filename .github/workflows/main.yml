@@ -26,20 +26,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      # Get the tag name
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::$(python prometheus/unisight-data-bridge/setup.py --version | sed 's/\+/_/')
-
-      - name: Check if the latest tag should be applied
-        id: get_latest
-        if: github.ref == 'refs/heads/master'
-        run: echo ::set-output name=TAG_LATEST::latest
-
-      - name: Get tag prefix
-        id: get_tag_prefix
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: echo ::set-output name=TAG_PREFIX::$(python prometheus/unisight-data-bridge/setup.py --version | sed 's/^\([0-9]*\)\.\([0-9]*\)\..*/\1.\2/')
+      # Get the tag names
+      - name: Get tag names
+        id: get_tags
+        run: echo ::set-output name=TAGS::$(prometheus/docker/docker-tags.sh)
 
       # Build python source distribution tarball
       - name: Build source distribution
@@ -51,7 +41,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: unisight-data-bridge
-          tags: ${{ steps.get_version.outputs.VERSION }} ${{ steps.get_tag_prefix.outputs.TAG_PREFIX }} ${{ steps.get_latest.outputs.TAG_LATEST }}
+          tags: ${{ steps.get_tags.outputs.TAGS }}
           dockerfiles: |
             prometheus/docker/Dockerfile
 

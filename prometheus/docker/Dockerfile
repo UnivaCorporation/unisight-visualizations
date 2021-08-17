@@ -1,7 +1,6 @@
 FROM python:3.6
 
 COPY . /unisight-visualizations
-RUN ls -la /unisight-visualizations
 RUN cd /unisight-visualizations/prometheus/unisight-data-bridge && python setup.py sdist
 
 FROM centos:7

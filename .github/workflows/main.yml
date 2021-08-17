@@ -46,7 +46,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: unisight-data-bridge
-          tags: ${{ steps.get_version.outputs.VERSION }}
+          tags: ${{ steps.get_version.outputs.VERSION }} ${{ steps.get_tag_prefix.outputs.TAG_PREFIX }}
           dockerfiles: |
             prometheus/docker/Dockerfile
 

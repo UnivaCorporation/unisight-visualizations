@@ -5,7 +5,7 @@ RUN ls -la /unisight-visualizations
 RUN cd /unisight-visualizations/prometheus/unisight-data-bridge && python setup.py sdist
 
 FROM centos:7
-RUN yum install -y python3 python3-venv python3-pip
+RUN yum update -y && yum install -y python3 python3-venv python3-pip
 
 COPY --from=0 /unisight-visualizations/prometheus/unisight-data-bridge/dist/unisight-data-bridge-*.tar.gz /tmp
 

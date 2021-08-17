@@ -16,7 +16,11 @@ from setuptools import find_packages, setup
 
 setup(
     name='unisight-data-bridge',
-    version='2.1.0',
+    use_scm_version={
+        "root": "../..",
+        "relative_to": __file__,
+    },
+    setup_requires=['setuptools_scm'],
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

@@ -29,7 +29,7 @@ jobs:
       # Get the tag names
       - name: Get tag names
         id: get_tags
-        run: echo ::set-output name=TAGS::$(prometheus/docker/docker-tags.sh)
+        run: echo ::set-output name=TAGS::$(prometheus/docker/docker-tags.sh ${{ github.ref }})
 
       # Build python source distribution tarball
       - name: Build source distribution

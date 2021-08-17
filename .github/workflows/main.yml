@@ -31,6 +31,11 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::$(python prometheus/unisight-data-bridge/setup.py --version | sed 's/\+/_/')
 
+      - name: Get tag prefix
+        id: get_tag_prefix
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo ::set-output name=TAG_PREFIX::$(python prometheus/unisight-data-bridge/setup.py --version | sed 's/v\([0-9]*\)\.\([0-9]*\)\..*/\1.\2/')
+
       # Build python source distribution tarball
       - name: Build source distribution
         run: |
@@ -47,12 +52,35 @@ jobs:
 
       # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
       # in which case 'username' and 'password' can be omitted.
-      - name: Push To quay.io
-        id: push-to-quay
+      - name: Push Version To quay.io
+        id: push-version-to-quay
+        if: github.ref != 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/v')
         uses: redhat-actions/push-to-registry@v2
         with:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/univa
+          username: univa+github_push
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Push Tag To quay.io
+        id: push-tag-to-quay
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }} ${{ steps.get_tag_prefix.outputs.TAG_PREFIX }}
+          registry: quay.io/univa
+          username: univa+github_push
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Push Latest quay.io
+        id: push-latest-to-quay
+        if: github.ref == 'refs/heads/master'
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: latest ${{ steps.build-image.outputs.tags }}
           registry: quay.io/univa
           username: univa+github_push
           password: ${{ secrets.REGISTRY_PASSWORD }}

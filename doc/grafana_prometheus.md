@@ -320,4 +320,5 @@ to product even more metrics that can then be consumed and rendered in Grafana.
 | ---------------------------------------- | ------------------- | ------------------ |
 | 1.0                                      | 4.4.2               | CentOS 7, Python 2 |
 | 2.0                                      | 4.4.2               | Python 3           |
-| 2.1                                      | 4.6.0               | Python 3           |
+| 2.1                                      | 4.6.0+              | Python 3           |
+| 2.2 (tbd)                                | (tbd)               | (tbd)              |

@@ -6,10 +6,8 @@ services:
     environment:
       - UNISIGHT_ADMIN_USER=$UNISIGHT_ADMIN_USER
       - UNISIGHT_ADMIN_PSWD=$UNISIGHT_ADMIN_PASSWORD
-      - GRAPHQL_HOST=172.20.0.1
+      - GRAPHQL_HOST=$GRAPHQL_HOST
       - GRAPHQL_PORT=3000
-    networks:
-      - internal
 
   prometheus:
     image: prom/prometheus
@@ -17,8 +15,6 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-    networks:
-      - internal
     volumes:
       - ./prometheus/:/etc/prometheus/
       - prometheus:/prometheus
@@ -41,12 +37,7 @@ services:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
     depends_on:
       - prometheus
-    networks:
-      - internal
 
-networks:
-  internal:
-    
 volumes:
   prometheus:
   grafana-storage:

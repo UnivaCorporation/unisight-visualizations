@@ -55,10 +55,64 @@ prerequisites through dashboard installation and configuration.
 
 ## Prerequisites
 The following installation instructions assume that there is both an
-existing Univa Grid Engine cluster and a Unisight server installation.
+existing Altair Grid Engine cluster and a Unisight server installation.
 Additionally the Unisight server has already been configured to pull
-data from the Univa Grid Engine cluster.  For instuctions on these
+data from the Altair Grid Engine cluster.  For instuctions on these
 two pre-requisites please refer to their product documentation.
+
+### Additional UGE Configuration
+
+The default dashboard requires additional Altair Grid Engine configuration for all of its widgets to
+function properly.  Specifically new Custom Resources and a load sensor must be added.  The load sensor
+monitors disk space and checks if a single execd binary is running on the target machine.
+
+#### Adding the Complex Resources
+    
+The complex resources can be added using the following commands:
+ 
+    qconf -sc > /tmp/sconf
+    echo "execd_running execd_running       INT         <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
+    echo "scratch_mounted scratch_mounted   INT         <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
+    echo "opt_total_space opt_total_space   DOUBLE      <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
+    echo "opt_used_space opt_used_space     DOUBLE      <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
+    echo "opt_avail_space opt_avail_space   DOUBLE      <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
+    qconf -Mc /tmp/sconf
+
+#### Adding the Load Sensor
+
+The load sensor is stored in this repo [here](grafana_prometheus_resources/loadsensor.sh).  Place
+it in the shared `$SGE_ROOT/$SGE_CELL` directory of your cluster
+as `loadsensor.sh` and then run the following command:
+
+    chmod a+x $SGE_ROOT/$SGE_CELL/loadsensor.sh
+    qconf -sconf | grep -v '^load_sensor' > /tmp/global
+    echo "load_sensor $SGE_ROOT/$SGE_CELL/loadsensor.sh" >> /tmp/global
+    qconf -Mconf /tmp/global
+
+## Dockerized Installation
+
+Dockerized installation includes data-bridge, prometheus and grafana containers.
+Installation requires docker 20.x and docker-compose 1.28 or later. Files for the 
+installation can be found in the source code of this repo. Navigate to releases link at:
+
+https://github.com/UnivaCorporation/unisight-visualizations/releases
+
+and download the source code for v2.1.0, then go to prometheus/docker directory.
+
+In the docker directory, edit the `docker-compose.yaml` file, and change `GRAPHQL_HOST` environment
+variable for data-bridge container to match ip address on which Unisight GraphQL service is accessible 
+(typically, ip address of the docker0 interface on the host where container is running). 
+
+To start the containers, in the same directory run:
+
+```
+docker-compose up -d
+```
+
+After containers are deployed, navagite to Grafana web interface at `http://localhost:3003`.  The default username and password are
+`admin`. After logging in change the password if you wish. Display default dashboard located in the Altair folder.
+
+## Deprecated Installation of Unisight Visualization Components
 
 The installation can be performed on any platform that is supported
 by both Grafana and Prometheus and has at least a Python 3.6 installation
@@ -67,7 +121,7 @@ CentOS 7 based system.  Additionally the instructions included bellow
 assume a systemd enabled system when it comes to service configuration
 but should be adaptable to other init systems without much trouble.
 
-## Unisight Data Bridge
+### Unisight Data Bridge
 
 The unisight data bridge can be installed from the releases section
 of this repo.  It is recommended that you create a new virtual environment
@@ -154,14 +208,14 @@ URL.  It should behave as follows:
     curl http://localhost:8001/
     This datasource is healthy.
 
-### Additional Security Concerns
+#### Additional Security Concerns
 
 To make this installation more secure a dedicated service user could be created and used
 to launch `guniciorn` in the `unisight-data-bridge`.  Additionally the HTTPS port for
 Unisight could be used but would require adding the CA used to set up Unisight as a 
 trusted CA on the machine running the Unisight Data Bridge.
 
-## Prometheus
+### Prometheus
 
 Prometheus can be downloaded from [here](https://prometheus.io/download/).
 Download the appropriate package for your platform and extract it in your
@@ -214,12 +268,12 @@ Prometheus can now be enabled and started.
     systemctl enable prometheus
     systemctl start prometheus
 
-### Additional Security Concerns
+#### Additional Security Concerns
 
 Creating a dedicated user for the Prometheus server would increase the security of this
 configuration.
 
-## Grafana
+### Grafana
 
 The installation instructions for Grafana can be found [here](https://grafana.com/docs/installation/).
 Grafana has very good instructions for all of its supported platforms.  Follow these
@@ -250,13 +304,13 @@ installation of the plugins is most easily accomplished by running the following
 Now that the Grafana service is enabled and running the remaining configuration steps are done
 through the Grafana UI.
 
-### Configuring Grafana
+#### Configuring Grafana
 
 Navagite to port 3000 (or the port manually configured in the `grafana.ini` file) on the machine
 where you installed Grafana to access its web interface.  The default username and password are
 `admin`.  After logging in change the password if you wish.
 
-#### Adding Data Sources
+##### Adding Data Sources
 
 The first step in configurating Grafana is adding the necessary data sources.  Click on the 
 'Gear' icon on the left menu bar and select 'Data Sources'.  Click the 'Add Data Source'
@@ -267,7 +321,7 @@ Next add a SimpleJSON data source by once again clicking the 'Gear' icon and sel
 Click the 'Add Data Source' button and then select 'SimpleJSON'.  In the 'SimpleJSON' configuration enter
 `http://localhost:8001/` in the URL field.  Finally click 'Save & Test' to commit the changes.
 
-### Importing a Dashboard
+#### Importing a Dashboard
 
 With the data sources added the next step is configuring a Dashboard.  A sample dashboard has been
 created and published to the Grafana dashboard service.  This dashboard can easily be imported into
@@ -279,34 +333,6 @@ Finally click 'Import' to import the dashboard.  The default dashboard should no
 You can preview a populated view of this dashboard by checking out its webpage on 
 [Grafana.com](https://grafana.com/grafana/dashboards/10565).
 
-### Additional UGE Configuration
-
-The default dashboard requires additional Univa Grid Engine configuration for all of its widgets to
-function properly.  Specifically new Custom Resources and a load sensor must be added.  The load sensor
-monitors disk space and checks if a single execd binary is running on the target machine.
-
-#### Adding the Complex Resources
-    
-The complex resources can be added using the following commands:
- 
-    qconf -sc > /tmp/sconf
-    echo "execd_running execd_running       INT         <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
-    echo "scratch_mounted scratch_mounted   INT         <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
-    echo "opt_total_space opt_total_space   DOUBLE      <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
-    echo "opt_used_space opt_used_space     DOUBLE      <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
-    echo "opt_avail_space opt_avail_space   DOUBLE      <=    NO NO        0        0    NO    0.000000" >> /tmp/sconf
-    qconf -Mc /tmp/sconf
-
-#### Adding the Load Sensor
-
-The load sensor is stored in this repo [here](grafana_prometheus_resources/loadsensor.sh).  Place
-it in the shared `$SGE_ROOT/$SGE_CELL` directory of your cluster
-as `loadsensor.sh` and then run the following command:
-
-    chmod a+x $SGE_ROOT/$SGE_CELL/loadsensor.sh
-    qconf -sconf | grep -v '^load_sensor' > /tmp/global
-    echo "load_sensor $SGE_ROOT/$SGE_CELL/loadsensor.sh" >> /tmp/global
-    qconf -Mconf /tmp/global
 
 ## Next Steps
 

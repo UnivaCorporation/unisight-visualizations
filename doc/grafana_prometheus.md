@@ -112,6 +112,27 @@ docker-compose up -d
 After containers are deployed, navagite to Grafana web interface at `http://localhost:3003`.  The default username and password are
 `admin`. After logging in change the password if you wish. Display default dashboard located in the Altair folder.
 
+### Offline Installation
+
+Before starting installation in an air-gapped environment, the following preparation steps need to be completed
+
+* Docker images need to be saved in an internet-connected environment by running the following commands:
+```
+docker pull quay.io/univa/unisight-data-bridge:2.1
+docker save -o data-bridge-2.1.tar quay.io/univa/unisight-data-bridge:2.1
+docker pull prom/prometheus
+docker save -o prometheus-latest.tar prom/prometheus
+docker pull grafana/grafana:7.5.11
+docker save -o grafana-7.5.11.tar grafana/grafana:7.5.11
+```
+* Images need to be loaded in an air-gapped environment:
+```
+docker load -i data-bridge-2.1.tar
+docker load -i prometheus-latest.tar
+docker load -i grafana-7.5.11.tar
+```
+
+
 ## Deprecated Installation of Unisight Visualization Components
 
 The installation can be performed on any platform that is supported

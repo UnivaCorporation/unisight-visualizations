@@ -28,43 +28,71 @@ from prometheus_client import  start_http_server, Gauge, Summary,Counter, Histog
 
 gauge_jobs = Gauge('jobs_by_state', 'Number of Jobs per State in the cluster',['state'])
 gauge_jobs_in_queue = Gauge('jobs_per_queue', 'Number of Jobs per Queue in the cluster',['queue_name'])
+jobs_in_queue_dict = {}
 gauge_slots_in_queue = Gauge('slots_per_queue', 'Number of Slots per Queue in the cluster',['queue_name'])
+slots_in_queue_dict = {}
 gauge_mem_used_per_queue = Gauge('mem_per_queue', 'Memory used by the Jobs per Queue in the cluster',['queue_name'])
+mem_used_per_queue_dict = {}
 gauge_np_load_avg = Gauge('np_load_avg', 'np_load_avg per Host in the cluster',['hostname'])
+np_load_avg_dict = {}
 
 gauge_tot_jobs_running_byuser = Gauge('count_jobr_user', 'Total Running Jobs by User',['user'])
+tot_jobs_running_byuser_dict = {}
 gauge_tot_jobs_running_byproject = Gauge('count_jobr_project', 'Total Running Jobs by Project',['project'])
+tot_jobs_running_byproject_dict = {}
 gauge_tot_jobs_queued_byuser = Gauge('count_jobq_user', 'Total Queued Jobs by User',['user'])
+tot_jobs_queued_byuser_dict = {}
 gauge_tot_jobs_queued_byproject = Gauge('count_jobq_project', 'Total Queued Jobs by Project',['project'])
+tot_jobs_queued_byproject_dict = {}
 gauge_tot_slots_byuser = Gauge('count_slots_user', 'Total Slots in use by User',['user'])
+tot_slots_byuser_dict = {}
 gauge_tot_slots_byproject = Gauge('count_slots_project', 'Total Slots in use by Projects',['project'])
+tot_slots_byproject_dict = {}
 
 #
 #
 gauge_tot_tasks_running_byuser = Gauge('tasks_running_byuser', 'Total Running Tasks by User',['user'])
+tot_tasks_running_byuser_dict = {}
 gauge_tot_tasks_running_byproject = Gauge('tasks_running_byproject', 'Total Running Tasks by Project',['project'])
+tot_tasks_running_byproject_dict = {}
 gauge_tot_tasks_queued_byuser = Gauge('tasks_queued_byuser', 'Total Queued Tasks by User',['user'])
+tot_tasks_queued_byuser_dict = {}
 gauge_tot_tasks_queued_byproject = Gauge('tasks_queued_byproject', 'Total Queued Tasks by Project',['project'])
+tot_tasks_queued_byproject_dict = {}
 #
 #
 
 # Job Usage by Users
 gauge_job_usage_mem_byuser = Gauge('count_usage_mem_user', 'Mem Usage by User',['user'])
+job_usage_mem_byuser_dict = {}
 gauge_job_usage_iow_byuser = Gauge('count_usage_iow_user', 'IOWaiting Usage by User',['user'])
+job_usage_iow_byuser_dict = {}
 gauge_job_usage_io_byuser = Gauge('count_usage_io_user', 'IO Usage by User',['user'])
+job_usage_io_byuser_dict = {}
 gauge_job_usage_wallclock_byuser = Gauge('count_usage_wallclock_user', 'Wallclock Usage by User',['user'])
+job_usage_wallclock_byuser_dict = {}
 gauge_job_usage_vmem_byuser = Gauge('count_usage_vmem_user', 'vmem Usage by User',['user'])
+job_usage_vmem_byuser_dict = {}
 gauge_job_usage_cpu_byuser = Gauge('count_usage_cpu_user', 'cpu Usage by User',['user'])
+job_usage_cpu_byuser_dict = {}
 gauge_job_usage_maxvmem_byuser = Gauge('count_usage_maxvmem_user', 'maxvmem Usage by User',['user'])
+job_usage_maxvmem_byuser_dict = {}
 
 # Job Usage by project
 gauge_job_usage_mem_byproject = Gauge('count_usage_mem_project', 'Mem Usage by Project',['project'])
+job_usage_mem_byproject_dict = {}
 gauge_job_usage_iow_byproject = Gauge('count_usage_iow_project', 'IOWaiting Usage by Project',['project'])
+job_usage_iow_byproject_dict = {}
 gauge_job_usage_io_byproject = Gauge('count_usage_io_project', 'IO Usage by Project',['project'])
+job_usage_io_byproject_dict = {}
 gauge_job_usage_wallclock_byproject = Gauge('count_usage_wallclock_project', 'Wallclock Usage by Project',['project'])
+job_usage_wallclock_byproject_dict = {}
 gauge_job_usage_vmem_byproject = Gauge('count_usage_vmem_project', 'vmem Usage by Project',['project'])
+job_usage_vmem_byproject_dict = {}
 gauge_job_usage_cpu_byproject = Gauge('count_usage_cpu_project', 'cpu Usage by Project',['project'])
+job_usage_cpu_byproject_dict = {}
 gauge_job_usage_maxvmem_byproject = Gauge('count_usage_maxvmem_project', 'maxvmem Usage by Project',['project'])
+job_usage_maxvmem_byproject_dict = {}
 
 # Total Usages for all Jobs
 gauge_tot_usage_mem = Gauge('count_usage_mem', 'Total Mem Usage')
@@ -90,12 +118,17 @@ gauge_jobid_usage_maxvmem = Gauge('job_usage_maxvmem', 'maxvmem Usage by Jobid',
 # Server Health
 gauge_server_mem_usage = Gauge('server_mem_usage', 'Memory usage by server',['hostname'])
 gauge_server_mem_free = Gauge('server_mem_free', 'Memory Free by server',['hostname'])
+server_mem_free_dict = {}
 gauge_server_cpu = Gauge('server_cpu_usage', 'CPU usage by server',['hostname'])
+server_cpu_dict = {}
 gauge_server_jobcount_usage = Gauge('server_jobcount_usage', 'JobCount usage by server',['hostname'])
 gauge_server_np_load_avg = Gauge('server_np_load_avg', 'np_load_avg by server',['hostname'])
 gauge_server_virtualmem_used = Gauge('server_virtualmem', 'Vmem usage by server',['hostname'])
+server_virtualmem_dict = {}
 gauge_server_scratch_total = Gauge('server_scratch_total', 'Local Scratch capacity by server',['hostname']) 
+server_scratch_total_dict = {}
 gauge_server_scratch_used = Gauge('server_scratch_used', 'Local Scratch in use by server',['hostname'])
+server_scratch_used_dict = {}
 gauge_server_execd_status = Gauge('server_execd_status', 'Execd process running in the server',['hostname'])
 
 # Cluster Info: Mem used, CPU, nodes, etc
@@ -145,10 +178,10 @@ def main(graphql_host, graphql_port, graphql_auth):
                 tot_queued_jobs_byProject(output_allJobsQueued)
                 tot_slots_byUser(output_allJobsRunning)
                 tot_slots_byProject(output_allJobsRunning)
-                #tot_running_tasks_byUser(output_allJobsRunning)
-                #tot_running_tasks_byProject(output_allJobsRunning)
-                #tot_queued_tasks_byUser(output_allJobsQueued)
-                #tot_queued_tasks_byProject(output_allJobsQueued)
+                tot_running_tasks_byUser(output_allJobsRunning)
+                tot_running_tasks_byProject(output_allJobsRunning)
+                tot_queued_tasks_byUser(output_allJobsQueued)
+                tot_queued_tasks_byProject(output_allJobsQueued)
   
 
                 tot_job_usage_mem_byUser(output_allJobsRunning)
@@ -213,6 +246,8 @@ def tot_running_jobs_byUser(myquery):
     count_users = 0
     ioops_used = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(tot_jobs_running_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         cont_jobr_user = job_dict.get(user,0)
@@ -225,6 +260,7 @@ def tot_running_jobs_byUser(myquery):
         count_users+=1
     for k, v in list(job_dict.items()):
         gauge_tot_jobs_running_byuser.labels(k).set(v)
+        tot_jobs_running_byuser_dict[k] = v
     gauge_tot_usage_slots.set(slots_used)
     gauge_count_users.set(count_users)
     gauge_tot_usage_iops.set(ioops_used)
@@ -236,6 +272,8 @@ def tot_running_jobs_byProject(myquery):
     job_dict = {}
     count_projects = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(tot_jobs_running_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         cont_jobr_project = job_dict.get(project,0)
@@ -244,6 +282,7 @@ def tot_running_jobs_byProject(myquery):
         count_projects+=1
     for k, v in list(job_dict.items()):
         gauge_tot_jobs_running_byproject.labels(k).set(v)
+        tot_jobs_running_byproject_dict[k] = v
         gauge_count_projects.set(count_projects)
 
 #
@@ -252,6 +291,8 @@ def tot_running_jobs_byProject(myquery):
 def tot_slots_byUser(myquery):
    slots_dict = {}
    allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+   for k in list(tot_slots_byuser_dict.keys()):
+        slots_dict[k]=0
    for j in allJobs.get('Jobs',[]):
        user = j.get('user',"unknown")
        slots = j.get('slots',"unknown")
@@ -260,6 +301,7 @@ def tot_slots_byUser(myquery):
        slots_dict[user] = used_slots
    for k, v in list(slots_dict.items()):
        gauge_tot_slots_byuser.labels(k).set(v)
+       tot_slots_byuser_dict[k] = v
 
 #
 # Total Running Slots/Cores by Project
@@ -267,6 +309,8 @@ def tot_slots_byUser(myquery):
 def tot_slots_byProject(myquery):
    slots_dict = {}
    allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+   for k in list(tot_slots_byproject_dict.keys()):
+        slots_dict[k]=0
    for j in allJobs.get('Jobs',[]):
        project = j.get('project',"unknown")
        slots = j.get('slots',"unknown")
@@ -275,6 +319,7 @@ def tot_slots_byProject(myquery):
        slots_dict[project] = used_slots
    for k, v in list(slots_dict.items()):
        gauge_tot_slots_byproject.labels(k).set(v)
+       tot_slots_byproject_dict[k] = v
 
 
 #
@@ -283,6 +328,8 @@ def tot_slots_byProject(myquery):
 def tot_running_tasks_byUser(myquery):
    tasks_dict = {}
    allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+   for k in list(tot_tasks_running_byuser_dict.keys()):
+        tasks_dict[k]=0
    for j in allJobs.get('Jobs',[]):
        print("Job %s" %j)
        user = j.get('user',"unknown")
@@ -293,6 +340,7 @@ def tot_running_tasks_byUser(myquery):
        tasks_dict[user] = count
    for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_running_byuser.labels(k).set(v)
+       tot_tasks_running_byuser_dict[k] = v
 
 #
 # Total Running Tasks by Project
@@ -300,6 +348,8 @@ def tot_running_tasks_byUser(myquery):
 def tot_running_tasks_byProject(myquery):
    tasks_dict = {}
    allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+   for k in list(tot_tasks_running_byproject_dict.keys()):
+        tasks_dict[k]=0
    for j in allJobs.get('Jobs',[]):
        project = j.get('project',"unknown")
        tasks = int(j.get('taskid',"unknown"))
@@ -309,6 +359,7 @@ def tot_running_tasks_byProject(myquery):
        tasks_dict[project] = count
    for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_running_byproject.labels(k).set(v)
+       tot_tasks_running_byproject_dict[k] = v
 
 #
 # Total Queued Tasks by User
@@ -316,6 +367,8 @@ def tot_running_tasks_byProject(myquery):
 def tot_queued_tasks_byUser(myquery):
    tasks_dict = {}
    allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+   for k in list(tot_tasks_queued_byuser_dict.keys()):
+        tasks_dict[k]=0
    for j in allJobs.get('Jobs',[]):
        user = j.get('user',"unknown")
        tasks = j.get('taskid',"unknown")
@@ -329,6 +382,7 @@ def tot_queued_tasks_byUser(myquery):
        tasks_dict[user] = count
    for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_queued_byuser.labels(k).set(v)
+       tot_tasks_queued_byuser_dict[k] = v
 
 
 #
@@ -337,6 +391,8 @@ def tot_queued_tasks_byUser(myquery):
 def tot_queued_tasks_byProject(myquery):
    tasks_dict = {}
    allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+   for k in list(tot_tasks_queued_byproject_dict.keys()):
+        tasks_dict[k]=0
    for j in allJobs.get('Jobs',[]):
        project = j.get('project',"unknown")
        tasks = j.get('taskid',"unknown")
@@ -350,6 +406,7 @@ def tot_queued_tasks_byProject(myquery):
        tasks_dict[project] = count
    for k, v in list(tasks_dict.items()):
        gauge_tot_tasks_queued_byproject.labels(k).set(v)
+       tot_tasks_queued_byproject_dict[k] = v
 
 #
 # Total Queued Jobs by User
@@ -357,6 +414,8 @@ def tot_queued_tasks_byProject(myquery):
 def tot_queued_jobs_byUser(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(tot_jobs_queued_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         cont_jobq_user = job_dict.get(user,0)
@@ -364,6 +423,7 @@ def tot_queued_jobs_byUser(myquery):
         job_dict[user] = cont_jobq_user
     for k, v in list(job_dict.items()):
         gauge_tot_jobs_queued_byuser.labels(k).set(v)
+        tot_jobs_queued_byuser_dict[k] = v
 
 #
 # Total Queued Jobs by Project
@@ -371,6 +431,8 @@ def tot_queued_jobs_byUser(myquery):
 def tot_queued_jobs_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(tot_jobs_queued_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         cont_jobq_project = job_dict.get(project,0)
@@ -378,6 +440,7 @@ def tot_queued_jobs_byProject(myquery):
         job_dict[project] = cont_jobq_project
     for k, v in list(job_dict.items()):
         gauge_tot_jobs_queued_byproject.labels(k).set(v)
+        tot_jobs_queued_byproject_dict[k] = v
 
 ################################################
 # Used CPU Time,vmem, Wallclock and IO by User #
@@ -388,6 +451,8 @@ def tot_job_usage_mem_byUser(myquery):
     job_dict = {}
     tot_mem_usage = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_mem_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         conunt_mem_usage = job_dict.get(user,0)
@@ -397,6 +462,7 @@ def tot_job_usage_mem_byUser(myquery):
         tot_mem_usage += conunt_mem_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_mem_byuser.labels(k).set(v)
+        job_usage_mem_byuser_dict[k] = v
     gauge_tot_usage_mem.set(tot_mem_usage)
 
 # IOWaiting Usage by User
@@ -404,6 +470,8 @@ def tot_job_usage_iow_byUser(myquery):
     job_dict = {}
     tot_iow_usage = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_iow_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         conunt_usage = job_dict.get(user,0)
@@ -413,6 +481,7 @@ def tot_job_usage_iow_byUser(myquery):
         tot_iow_usage += conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_iow_byuser.labels(k).set(v)
+        job_usage_iow_byuser_dict[k] = v
     gauge_tot_usage_iow.set(tot_iow_usage)
 
 # IO Usage by User
@@ -420,6 +489,8 @@ def tot_job_usage_io_byUser(myquery):
     job_dict = {}
     total_value = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_io_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         conunt_usage = job_dict.get(user,0)
@@ -429,6 +500,7 @@ def tot_job_usage_io_byUser(myquery):
         total_value += conunt_usage 
     for k, v in list(job_dict.items()):
         gauge_job_usage_io_byuser.labels(k).set(v)
+        job_usage_io_byuser_dict[k] = v
     gauge_tot_usage_iow.set(total_value)
 
 # wallclock Usage by User
@@ -436,6 +508,8 @@ def tot_job_usage_wallclock_byUser(myquery):
     job_dict = {}
     total_value = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_wallclock_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         conunt_usage = job_dict.get(user,0)
@@ -445,6 +519,7 @@ def tot_job_usage_wallclock_byUser(myquery):
         total_value += conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_wallclock_byuser.labels(k).set(v)
+        job_usage_wallclock_byuser_dict[k] = v
     gauge_tot_usage_wallclock.set(total_value)
 
 # CPU Usage by User
@@ -452,6 +527,8 @@ def tot_job_usage_cpu_byUser(myquery):
     job_dict = {}
     total_value = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_cpu_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         conunt_usage = job_dict.get(user,0)
@@ -461,6 +538,7 @@ def tot_job_usage_cpu_byUser(myquery):
         total_value += conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_cpu_byuser.labels(k).set(v)
+        job_usage_cpu_byuser_dict[k] = v
     gauge_tot_usage_cpu.set(total_value)
 
 # vmem Usage by User
@@ -468,6 +546,8 @@ def tot_job_usage_vmem_byUser(myquery):
     job_dict = {}
     total_value = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_vmem_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         user = j.get('user',"unknown")
         conunt_usage = job_dict.get(user,0)
@@ -477,6 +557,7 @@ def tot_job_usage_vmem_byUser(myquery):
         total_value += conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_vmem_byuser.labels(k).set(v)
+        job_usage_vmem_byuser_dict[k] = v
     gauge_tot_usage_vmem.set(total_value)
 
 # Maxvmem Usage by User
@@ -484,6 +565,8 @@ def tot_job_usage_maxvmem_byUser(myquery):
     job_dict = {}
     total_value = 0
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_maxvmem_byuser_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]): 
         user = j.get('user',"unknown")
         conunt_usage = job_dict.get(user,0)
@@ -493,6 +576,7 @@ def tot_job_usage_maxvmem_byUser(myquery):
         total_value += conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_maxvmem_byuser.labels(k).set(v)
+        job_usage_maxvmem_byuser_dict[k] = v
     gauge_tot_usage_maxvmem.set(total_value)
 
 ###################################################
@@ -503,6 +587,8 @@ def tot_job_usage_maxvmem_byUser(myquery):
 def tot_job_usage_mem_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_mem_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         conunt_mem_usage = job_dict.get(project,0)
@@ -511,11 +597,14 @@ def tot_job_usage_mem_byProject(myquery):
         job_dict[project] = conunt_mem_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_mem_byproject.labels(k).set(v)
+        job_usage_mem_byproject_dict[k] = v
 
 # IOWaiting Usage by Project
 def tot_job_usage_iow_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_iow_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         conunt_usage = job_dict.get(project,0)
@@ -524,11 +613,14 @@ def tot_job_usage_iow_byProject(myquery):
         job_dict[project] = conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_iow_byproject.labels(k).set(v)
+        job_usage_iow_byproject_dict[k] = v
 
 # IO Usage by Project
 def tot_job_usage_io_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_io_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         conunt_usage = job_dict.get(project,0)
@@ -537,11 +629,14 @@ def tot_job_usage_io_byProject(myquery):
         job_dict[project] = conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_io_byproject.labels(k).set(v)
+        job_usage_io_byproject_dict[k] = v
 
 # wallclock Usage by Project
 def tot_job_usage_wallclock_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_wallclock_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         conunt_usage = job_dict.get(project,0)
@@ -550,11 +645,14 @@ def tot_job_usage_wallclock_byProject(myquery):
         job_dict[project] = conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_wallclock_byproject.labels(k).set(v)
+        job_usage_wallclock_byproject_dict[k] = v
 
 # CPU Usage by Project
 def tot_job_usage_cpu_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_cpu_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         conunt_usage = job_dict.get(project,0)
@@ -563,11 +661,14 @@ def tot_job_usage_cpu_byProject(myquery):
         job_dict[project] = conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_cpu_byproject.labels(k).set(v)
+        job_usage_cpu_byproject_dict[k] = v
 
 # vmem Usage by Project
 def tot_job_usage_vmem_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_vmem_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         conunt_usage = job_dict.get(project,0)
@@ -576,11 +677,14 @@ def tot_job_usage_vmem_byProject(myquery):
         job_dict[project] = conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_vmem_byproject.labels(k).set(v)
+        job_usage_vmem_byproject_dict[k] = v
 
 # Maxvmem Usage by Project
 def tot_job_usage_maxvmem_byProject(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(job_usage_maxvmem_byproject_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         project = j.get('project',"unknown")
         conunt_usage = job_dict.get(project,0)
@@ -589,6 +693,7 @@ def tot_job_usage_maxvmem_byProject(myquery):
         job_dict[project] = conunt_usage
     for k, v in list(job_dict.items()):
         gauge_job_usage_maxvmem_byproject.labels(k).set(v)
+        job_usage_maxvmem_byproject_dict[k] = v
 
 #########################
 # Usage by every JobID  #
@@ -721,6 +826,8 @@ def server_info_memusage(myquery):
 def server_info_memfree(myquery):
     host_dict = {}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
+    for k in list(server_mem_free_dict.keys()):
+        host_dict[k]=0
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         conunt_usage = host_dict.get(hostname,0)
@@ -729,6 +836,7 @@ def server_info_memfree(myquery):
         host_dict[hostname] = conunt_usage
     for k, v in list(host_dict.items()):
         gauge_server_mem_free.labels(k).set(v)
+        server_mem_free_dict[k] = v
 
 
 # jobCount by server
@@ -765,6 +873,8 @@ def server_info_np_load_avg(myquery):
 def server_info_cpu(myquery):
     host_dict = {}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
+    for k in list(server_cpu_dict.keys()):
+        host_dict[k]=0
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
@@ -773,11 +883,14 @@ def server_info_cpu(myquery):
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
         gauge_server_cpu.labels(k).set(v)
+        server_cpu_dict[k] = v
 
 # virtual_mem used by server
 def server_info_virtual_mem(myquery):
     host_dict = {}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
+    for k in list(server_virtualmem_dict.keys()):
+        host_dict[k]=0
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
@@ -786,11 +899,14 @@ def server_info_virtual_mem(myquery):
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
         gauge_server_virtualmem_used.labels(k).set(v)
+        server_virtualmem_dict[k] = v
 
 # local scratch used by server
 def server_info_local_scratch_total(myquery):
     host_dict = {}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
+    for k in list(server_scratch_total_dict.keys()):
+        host_dict[k]=0
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
@@ -799,11 +915,14 @@ def server_info_local_scratch_total(myquery):
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
         gauge_server_scratch_total.labels(k).set(v)
+        server_scratch_total_dict[k] = v
 
 # local scratch used by server
 def server_info_local_scratch_used(myquery):
     host_dict = {}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
+    for k in list(server_scratch_used_dict.keys()):
+        host_dict[k]=0
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         count_usage = host_dict.get(hostname,0)
@@ -812,12 +931,14 @@ def server_info_local_scratch_used(myquery):
         host_dict[hostname] = count_usage
     for k, v in list(host_dict.items()):
         gauge_server_scratch_used.labels(k).set(v)
+        server_scratch_used_dict[k] = v
 
 #gauge_server_execd_status = Gauge('server_execd_status', 'Execd process running in the server',['hostname'])
 # Execd_status in the server. # Values 0 or 1
 def server_info_execd_status(myquery):
     host_dict = {}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
+    gauge_server_execd_status._metrics.clear()
 
     # Loop over hosts
     for h in allHosts.get('Hosts', []):
@@ -956,6 +1077,8 @@ def jobs_by_state(myquery):
 def jobs_per_queue(myquery):
     job_queue_name_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(jobs_in_queue_dict.keys()):
+        job_queue_name_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         queue_name = j.get('queue_name',"unknown")
         count = job_queue_name_dict.get(queue_name,0)
@@ -963,11 +1086,14 @@ def jobs_per_queue(myquery):
         job_queue_name_dict[queue_name] = count
     for k, v in list(job_queue_name_dict.items()):
         gauge_jobs_in_queue.labels(k).set(v)
+        jobs_in_queue_dict[k] = v
 
 
 def get_queue_slots(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(slots_in_queue_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         queue_name = j.get('queue_name',"unknown")
         count = job_dict.get(queue_name,0)
@@ -976,10 +1102,13 @@ def get_queue_slots(myquery):
         job_dict[queue_name] = count
     for k, v in list(job_dict.items()):
         gauge_slots_in_queue.labels(k).set(v)
+        slots_in_queue_dict[k] = v
 
 def get_mem_per_queue(myquery):
     job_dict = {}
     allJobs = json.loads(myquery).get('data',{}).get('allJobs',{})
+    for k in list(mem_used_per_queue_dict.keys()):
+        job_dict[k]=0
     for j in allJobs.get('Jobs',[]):
         queue_name = j.get('queue_name',"unknown")
         count = job_dict.get(queue_name,0)
@@ -988,13 +1117,17 @@ def get_mem_per_queue(myquery):
         job_dict[queue_name] = count
     for k, v in list(job_dict.items()):
         gauge_mem_used_per_queue.labels(k).set(v)
+        mem_used_per_queue_dict[k] = v
 
 def get_np_load_avg(myquery):
     host_dict ={}
     allHosts = json.loads(myquery).get('data',{}).get('allHosts',{})
+    for k in list(np_load_avg_dict.keys()):
+        host_dict[k]=0
     for h in allHosts.get('Hosts',[]):
         hostname = h.get('hostname',"unknown")
         np_load_avg = h.get('resourceNumericValues', {}).get('np_load_avg',0)
         host_dict[hostname] = np_load_avg
     for k, v in list(host_dict.items()):
         gauge_np_load_avg.labels(k).set(v)
+        np_load_avg_dict[k] = v

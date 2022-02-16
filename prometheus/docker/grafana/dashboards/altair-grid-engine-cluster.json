@@ -3158,7 +3158,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Tasks Running by Project",
+      "title": "Tasks Queued by Project",
       "tooltip": {
         "shared": true,
         "sort": 0,

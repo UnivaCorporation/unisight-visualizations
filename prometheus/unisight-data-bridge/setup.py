@@ -29,7 +29,7 @@ setup(
       'werkzeug==0.16.1',
       'graphqlclient==0.2.4',
       'gunicorn==19.9.0',
-      'numpy==1.17.4',
+      'numpy==1.22.0',
       'Flask==1.0.2',
       'pandas==1.0.5',
       'prometheus-client==0.6.0',

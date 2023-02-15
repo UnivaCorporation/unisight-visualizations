@@ -26,7 +26,7 @@ setup(
     zip_safe=False,
     python_requires='>=3.6',
     install_requires=[
-      'werkzeug==0.16.1',
+      'werkzeug==2.2.3',
       'graphqlclient==0.2.4',
       'gunicorn==19.9.0',
       'numpy==1.17.4',
